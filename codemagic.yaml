@@ -1,0 +1,41 @@
+workflows:
+  ios-rbmecanique:
+    name: RBMecanique
+    instance_type: mac_mini_m1
+    environment:
+      vars:
+        XCODE_WORKSPACE: "App.xcworkspace"
+        XCODE_SCHEME: "App"
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.compatib.rbmecanique
+    scripts:
+      - name: Install npm dependencies for Ionic Capacitor project
+        script: |
+          npm install
+      - name: Create IOS project
+        script: |
+          ionic capacitor copy ios
+          ionic capacitor update
+      - name: Cocoapods installation
+        script: |
+          cd ios/App && pod install
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles
+      - name: Build ipa for distribution
+        script: |
+          cd ios/App
+          xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - $HOME/clone/ios/App/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM 
+    publishing:
+      email:
+        recipients:
+          - dev.athibault@gmail.com
+        notify:
+          failure: true
+          success: true
