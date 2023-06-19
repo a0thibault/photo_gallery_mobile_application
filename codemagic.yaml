@@ -1,6 +1,6 @@
 workflows:
-  ios-photo-gallery:
-    name: Photo-gallery
+  ios-rbmecanique:
+    name: RBMecanique
     instance_type: mac_mini_m1
     environment:
       vars:
@@ -8,7 +8,7 @@ workflows:
         XCODE_SCHEME: "App"
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: io.ionic.starter
+        bundle_identifier: com.compatib.rbmecanique
     scripts:
       - name: Install npm dependencies for Ionic Capacitor project
         script: |
